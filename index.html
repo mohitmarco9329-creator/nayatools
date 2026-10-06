@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NayaTools - Useful Online Tools</title>
+
+<meta name="description"
+content="NayaTools offers simple, useful and privacy-friendly browser tools.">
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f5f7fb;
+  color:#1f2937;
+}
+
+header{
+  background:#111827;
+  color:white;
+  padding:22px 18px;
+}
+
+.header-inner{
+  max-width:1100px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+}
+
+.logo{
+  font-size:25px;
+  font-weight:800;
+}
+
+.logo span{
+  color:#60a5fa;
+}
+
+nav a{
+  color:white;
+  text-decoration:none;
+  margin-left:18px;
+  font-size:14px;
+}
+
+.hero{
+  max-width:1100px;
+  margin:0 auto;
+  padding:55px 18px 35px;
+  text-align:center;
+}
+
+.hero h1{
+  font-size:42px;
+  margin:0 0 15px;
+}
+
+.hero h1 span{
+  color:#2563eb;
+}
+
+.hero p{
+  max-width:650px;
+  margin:0 auto;
+  color:#64748b;
+  line-height:1.7;
+  font-size:17px;
+}
+
+.badge{
+  display:inline-block;
+  background:#dbeafe;
+  color:#1d4ed8;
+  padding:8px 14px;
+  border-radius:30px;
+  font-size:13px;
+  font-weight:bold;
+  margin-bottom:18px;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:15px 18px 50px;
+}
+
+.section-title{
+  text-align:center;
+  margin:20px 0 25px;
+}
+
+.section-title h2{
+  margin-bottom:8px;
+}
+
+.section-title p{
+  color:#64748b;
+  margin:0;
+}
+
+.tools-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:18px;
+}
+
+.tool-card{
+  background:white;
+  border-radius:16px;
+  padding:23px;
+  box-shadow:0 5px 20px rgba(0,0,0,.07);
+  border:1px solid #e5e7eb;
+  transition:.2s;
+}
+
+.tool-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 9px 25px rgba(0,0,0,.11);
+}
+
+.icon{
+  font-size:36px;
+  margin-bottom:12px;
+}
+
+.tool-card h3{
+  margin:0 0 10px;
+  font-size:19px;
+}
+
+.tool-card p{
+  color:#64748b;
+  font-size:14px;
+  line-height:1.6;
+  min-height:45px;
+}
+
+.tool-card a{
+  display:inline-block;
+  margin-top:10px;
+  padding:10px 15px;
+  background:#2563eb;
+  color:white;
+  text-decoration:none;
+  border-radius:9px;
+  font-size:14px;
+  font-weight:bold;
+}
+
+.about{
+  margin-top:45px;
+  background:white;
+  padding:25px;
+  border-radius:16px;
+  border:1px solid #e5e7eb;
+  text-align:center;
+}
+
+.about p{
+  color:#64748b;
+  line-height:1.7;
+}
+
+footer{
+  text-align:center;
+  padding:25px 15px;
+  color:#64748b;
+  font-size:13px;
+  border-top:1px solid #e5e7eb;
+}
+
+@media(max-width:600px){
+
+  .header-inner{
+    flex-direction:column;
+  }
+
+  nav a{
+    margin:0 7px;
+  }
+
+  .hero h1{
+    font-size:32px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+  <div class="header-inner">
+
+    <div class="logo">
+      🧰 <span>Naya</span>Tools
+    </div>
+
+    <nav>
+      <a href="#tools">Tools</a>
+      <a href="#about">About</a>
+    </nav>
+
+  </div>
+
+</header>
+
+
+<section class="hero">
+
+  <div class="badge">
+    🚀 Simple • Useful • Browser Based
+  </div>
+
+  <h1>
+    Useful Tools for <span>Real Problems</span>
+  </h1>
+
+  <p>
+    NayaTools is a collection of simple browser-based tools
+    designed to solve practical problems that people face every day.
+    No complicated software required.
+  </p>
+
+</section>
+
+
+<div class="container" id="tools">
+
+  <div class="section-title">
+
+    <h2>🛠️ Our Tools</h2>
+
+    <p>
+      New practical tools will be added here regularly.
+    </p>
+
+  </div>
+
+
+  <div class="tools-grid">
+
+    <div class="tool-card">
+
+      <div class="icon">🚧</div>
+
+      <h3>More Tools Coming Soon</h3>
+
+      <p>
+        We are building useful tools that focus on
+        real-world problems and simple solutions.
+      </p>
+
+      <a href="#about">
+        Coming Soon
+      </a>
+
+    </div>
+
+  </div>
+
+
+  <div class="about" id="about">
+
+    <h2>About NayaTools</h2>
+
+    <p>
+      NayaTools focuses on creating simple and practical
+      browser tools. Our goal is not to make hundreds of
+      ordinary tools, but to build tools that are genuinely
+      useful and solve specific problems.
+    </p>
+
+    <p>
+      Whenever possible, tools will process files directly
+      in your browser instead of requiring unnecessary uploads.
+    </p>
+
+  </div>
+
+</div>
+
+
+<footer>
+
+  © 2026 NayaTools • Simple tools for everyday problems
+
+</footer>
+
+
+</body>
+  </html>
