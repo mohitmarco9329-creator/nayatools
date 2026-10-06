@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Screenshot Problem Detector - ToolZen</title>
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f5f7fb;
+  color:#1f2937;
+}
+
+.container{
+  max-width:850px;
+  margin:30px auto;
+  padding:20px;
+}
+
+h1{
+  text-align:center;
+  margin-bottom:10px;
+}
+
+.subtitle{
+  text-align:center;
+  color:#64748b;
+  line-height:1.6;
+  margin-bottom:25px;
+}
+
+.tool-box{
+  background:white;
+  padding:25px;
+  border-radius:16px;
+  box-shadow:0 6px 25px rgba(0,0,0,.08);
+}
+
+.upload-area{
+  border:2px dashed #64748b;
+  border-radius:14px;
+  padding:35px 20px;
+  text-align:center;
+  cursor:pointer;
+  background:#fafbfc;
+}
+
+.upload-area:hover{
+  background:#f1f5f9;
+}
+
+.upload-area input{
+  display:none;
+}
+
+.upload-icon{
+  font-size:48px;
+  margin-bottom:10px;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  margin-top:15px;
+  border:0;
+  border-radius:10px;
+  background:#2563eb;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:hover{
+  opacity:.9;
+}
+
+.reset{
+  background:#475569;
+}
+
+#result{
+  display:none;
+  margin-top:25px;
+}
+
+.status{
+  text-align:center;
+  padding:20px;
+  border-radius:14px;
+  background:#f1f5f9;
+  margin-bottom:18px;
+}
+
+.status-icon{
+  font-size:40px;
+}
+
+.status-title{
+  font-size:24px;
+  font-weight:bold;
+  margin-top:8px;
+}
+
+.check{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  padding:14px;
+  margin:9px 0;
+  border-radius:10px;
+  background:#f8fafc;
+  border-left:5px solid #94a3b8;
+}
+
+.good{
+  border-left-color:#22c55e;
+}
+
+.warning{
+  border-left-color:#f59e0b;
+}
+
+.problem{
+  border-left-color:#ef4444;
+}
+
+.label{
+  font-weight:bold;
+}
+
+.value{
+  text-align:right;
+  word-break:break-word;
+}
+
+.tip{
+  margin-top:20px;
+  padding:15px;
+  background:#fff7ed;
+  border-radius:10px;
+  color:#7c2d12;
+  line-height:1.6;
+  font-size:14px;
+}
+
+footer{
+  text-align:center;
+  color:#64748b;
+  font-size:13px;
+  margin-top:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>📱 Screenshot Problem Detector</h1>
+
+  <p class="subtitle">
+    Upload a screenshot and quickly check its size, resolution,
+    aspect ratio and basic quality problems.
+  </p>
+
+  <div class="tool-box">
+
+    <label class="upload-area">
+
+      <div class="upload-icon">🖼️</div>
+
+      <strong>Select Screenshot</strong>
+
+      <p>Click here to choose a JPG, PNG or WEBP image.</p>
+
+      <input
+        type="file"
+        id="imageInput"
+        accept="image/jpeg,image/png,image/webp"
+        onchange="previewSelectedFile()"
+      >
+
+    </label>
+
+    <div id="fileName"
+         style="margin-top:15px;text-align:center;color:#64748b;">
+    </div>
+
+    <button onclick="analyzeScreenshot()">
+      🔍 Analyze Screenshot
+    </button>
+
+    <div id="result">
+
+      <div class="status">
+
+        <div class="status-icon" id="statusIcon">
+          🔍
+        </div>
+
+        <div class="status-title" id="statusTitle">
+          Checking...
+        </div>
+
+        <div id="statusText">
+          Analyzing your screenshot.
+        </div>
+
+      </div>
+
+      <div id="checks"></div>
+
+      <div class="tip" id="tipBox">
+        💡 Tip: For important uploads, always check
+        whether text and important details are clearly readable.
+      </div>
+
+      <button class="reset" onclick="resetTool()">
+        🔄 Check Another Screenshot
+      </button>
+
+    </div>
+
+  </div>
+
+  <footer>
+    ToolZen • Screenshot quality checker
+  </footer>
+
+</div>
+
+
+<script>
+
+let selectedFile = null;
+
+
+/* Show selected filename */
+
+function previewSelectedFile(){
+
+  const input = document.getElementById("imageInput");
+
+  if(!input.files.length){
+    return;
+  }
+
+  selectedFile = input.files[0];
+
+  document.getElementById("fileName").textContent =
+    "Selected: " + selectedFile.name;
+
+}
+
+
+/* Analyze screenshot */
+
+function analyzeScreenshot(){
+
+  if(!selectedFile){
+
+    alert("Please select a screenshot first.");
+
+    return;
+  }
+
+
+  const imageURL =
+    URL.createObjectURL(selectedFile);
+
+  const image =
+    new Image();
+
+
+  image.onload = function(){
+
+    const width = image.width;
+    const height = image.height;
+
+    const fileSizeMB =
+      selectedFile.size / (1024 * 1024);
+
+    const ratio =
+      width / height;
+
+
+    let checks = [];
+
+    let problems = 0;
+
+    let warnings = 0;
+
+
+    /* File size */
+
+    if(fileSizeMB <= 5){
+
+      checks.push({
+        type:"good",
+        label:"File Size",
+        value:fileSizeMB.toFixed(2) +
+        " MB — Good"
+      });
+
+    }else{
+
+      checks.push({
+        type:"warning",
+        label:"File Size",
+        value:fileSizeMB.toFixed(2) +
+        " MB — Large screenshot"
+      });
+
+      warnings++;
+
+    }
+
+
+    /* Resolution */
+
+    if(width >= 1000 && height >= 700){
+
+      checks.push({
+        type:"good",
+        label:"Resolution",
+        value:width + " × " +
+        height + " pixels — Good"
+      });
+
+    }else if(width >= 600 && height >= 400){
+
+      checks.push({
+        type:"warning",
+        label:"Resolution",
+        value:width + " × " +
+        height +
+        " pixels — May look small"
+      });
+
+      warnings++;
+
+    }else{
+
+      checks.push({
+        type:"problem",
+        label:"Resolution",
+        value:width + " × " +
+        height +
+        " pixels — Very small"
+      });
+
+      problems++;
+
+    }
+
+
+    /* Aspect ratio */
+
+    let ratioName = "";
+
+    if(Math.abs(ratio - 1) < 0.05){
+
+      ratioName = "1:1 Square";
+
+    }else if(Math.abs(ratio - 16/9) < 0.05){
+
+      ratioName = "16:9 Widescreen";
+
+    }else if(Math.abs(ratio - 9/16) < 0.05){
+
+      ratioName = "9:16 Portrait";
+
+    }else if(Math.abs(ratio - 4/3) < 0.05){
+
+      ratioName = "4:3";
+
+    }else{
+
+      ratioName =
+        ratio.toFixed(2) + ":1";
+
+    }
+
+
+    checks.push({
+      type:"good",
+      label:"Aspect Ratio",
+      value:ratioName
+    });
+
+
+    /* Very wide / very tall image */
+
+    if(ratio > 4){
+
+      checks.push({
+        type:"warning",
+        label:"Shape",
+        value:"Very wide image — some platforms may crop it."
+      });
+
+      warnings++;
+
+    }else if(ratio < 0.25){
+
+      checks.push({
+        type:"warning",
+        label:"Shape",
+        value:"Very tall image — some platforms may crop it."
+      });
+
+      warnings++;
+
+    }else{
+
+      checks.push({
+        type:"good",
+        label:"Shape",
+        value:"Normal screenshot proportions detected."
+      });
+
+    }
+
+
+    /* File format */
+
+    const format =
+      selectedFile.type || "Unknown";
+
+    checks.push({
+      type:"good",
+      label:"Image Format",
+      value:format
+    });
+
+
+    /* Determine final status */
+
+    let icon = "";
+    let title = "";
+    let text = "";
+
+    if(problems > 0){
+
+      icon = "❌";
+
+      title = "Problem Detected";
+
+      text =
+        "This screenshot has at least one issue that should be reviewed.";
+
+    }else if(warnings > 0){
+
+      icon = "⚠️";
+
+      title = "Needs Review";
+
+      text =
+        "The screenshot is usable, but some details should be checked.";
+
+    }else{
+
+      icon = "✅";
+
+      title = "Looks Good";
+
+      text =
+        "No major basic quality problems were detected.";
+
+    }
+
+
+    document.getElementById("statusIcon").textContent =
+      icon;
+
+    document.getElementById("statusTitle").textContent =
+      title;
+
+    document.getElementById("statusText").textContent =
+      text;
+
+
+    const checksBox =
+      document.getElementById("checks");
+
+    checksBox.innerHTML = "";
+
+
+    checks.forEach(function(item){
+
+      const row =
+        document.createElement("div");
+
+      row.className =
+        "check " + item.type;
+
+      row.innerHTML =
+        '<div class="label">' +
+        item.label +
+        '</div>' +
+
+        '<div class="value">' +
+        item.value +
+        '</div>';
+
+      checksBox.appendChild(row);
+
+    });
+
+
+    if(problems > 0){
+
+      document.getElementById("tipBox").innerHTML =
+        "💡 Tip: Try using a higher-resolution screenshot " +
+        "and make sure important text is clearly readable.";
+
+    }else if(warnings > 0){
+
+      document.getElementById("tipBox").innerHTML =
+        "💡 Tip: Your screenshot can probably be used, " +
+        "but review the warning items before uploading or sharing it.";
+
+    }else{
+
+      document.getElementById("tipBox").innerHTML =
+        "💡 Tip: This screenshot looks suitable based on " +
+        "basic size and resolution checks.";
+
+    }
+
+
+    document.getElementById("result").style.display =
+      "block";
+
+
+    URL.revokeObjectURL(imageURL);
+
+  };
+
+
+  image.onerror = function(){
+
+    alert(
+      "This image could not be analyzed. Please select a valid JPG, PNG or WEBP image."
+    );
+
+    URL.revokeObjectURL(imageURL);
+
+  };
+
+
+  image.src = imageURL;
+
+}
+
+
+/* Reset */
+
+function resetTool(){
+
+  selectedFile = null;
+
+  document.getElementById("imageInput").value = "";
+
+  document.getElementById("fileName").textContent = "";
+
+  document.getElementById("result").style.display =
+    "none";
+
+}
+
+</script>
+
+</body>
+  </html>
